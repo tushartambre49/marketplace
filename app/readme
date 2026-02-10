@@ -1,0 +1,94 @@
+1]How would you scale search to millions of listings?
+Use Elasticsearch with Laravel Scout for full-text search.
+ Index listings asynchronously via queues. Cache frequent searches with Redis.
+  Shard data across regions.
+   Paginate with cursor-based infinite scroll in Livewire.
+2]How would you prevent spam and abuse?
+
+To prevent spam I would add few protection layers.
+
+First, email verification before user can send enquiry.
+Then rate limit like number of enquiries per hour/day.
+
+I would also block duplicate enquiries for same listing (already handled with unique constraint).
+
+Captcha can be added on enquiry form to stop bots.
+
+For content, basic keyword filtering + flag system can help detect abuse.
+
+If platform grows, we can add trust score for users and stricter rules for new accounts
+
+
+3]How would you design a moderation workflow?
+
+Moderation should be status-driven and auditable.
+
+I designed listings with statuses:
+
+Draft
+
+Pending Approval
+
+Approved
+
+Suspended
+
+Workflow:
+
+Provider creates or edits listing → Status = Pending
+
+Admin reviews listing in moderation panel
+
+Admin actions:
+
+Approve → becomes visible in search
+
+Reject → send feedback to provider
+
+Suspend → hide due to policy violation
+
+Enhancements I would add:
+
+Moderation notes/history
+
+Auto-flagging suspicious content
+
+Bulk approval tools
+
+Notification to providers on status change
+
+This keeps public content controlled while allowing providers to iterating.
+
+4]How would you prepare this system for multi-region support?
+
+o support multiple countries / regions I will design database + infra both way.
+
+Database side
+
+Add country / region column in listings table.
+City + suburb geo indexing for fast local search.
+If data grows too big then partition data region wise.
+
+Infrastructure
+
+Deploy app servers in multiple regions (AWS / GCP).
+Use load balancer + geo routing so user hit nearest server.
+Use CDN for images / static files.
+
+Search
+
+Search should be region aware.
+User should see nearby listings first not global.
+
+Currency & localization
+
+Add multi currency pricing support.
+Timezone handling needed.
+Language translation can be added later.
+
+Data replication
+
+Use read replicas per region.
+Search indexes sync async (eventual consistency ok).
+
+This way system will scale globally with low latency + better user experience
